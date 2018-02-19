@@ -34,5 +34,13 @@ namespace TankGame
 
             return didDie;
         }
+
+        protected void RaiseUnitDiedEvent() 
+        {
+            if ( UnitDied != null ) 
+            {
+
+            }
+        }
     }
 }

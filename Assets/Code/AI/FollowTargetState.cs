@@ -32,29 +32,20 @@ namespace TankGame.AI
 
         private bool ChangeState()
         {
-            int playerLayer = LayerMask.NameToLayer("Player");
-            int mask = Flags.CreateMask(playerLayer);
+            // 1. Are we at the shooting range?
+            // If yes, go to shoot state.
+            float sqrDistanceToTarget = Owner.ToTargetVector.Value.sqrMagnitude;
+            if (sqrDistanceToTarget < Owner.SqrShootingDistance)
+            {
+                return Owner.PerformTransition(AIStateType.Shoot);
+            }
 
-            Collider[] players = Physics.OverlapSphere(Owner.transform.position,
-                Owner.DetectEnemyDistance, mask);
-
-            if (players.Length < 1)
+            // 2. Did the player get away?
+            // If yes, go to patrol state.
+            if (sqrDistanceToTarget > Owner.SqrDetectEnemyDistance) 
             {
                 Owner.Target = null;
                 return Owner.PerformTransition(AIStateType.Patrol);
-            }
-
-            Vector3 playerVector = Owner.Target.transform.position - Owner.transform.position;
-
-            Debug.Log(playerVector);
-            if(playerVector == Owner.transform.forward)
-
-            players = Physics.OverlapSphere(Owner.transform.position,
-                Owner.SqrShootingDistance, mask);
-
-            if (players.Length > 0)
-            {
-                return Owner.PerformTransition(AIStateType.Shoot);
             }
 
             return false;

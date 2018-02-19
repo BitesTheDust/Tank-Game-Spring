@@ -22,6 +22,16 @@ namespace TankGame
 		private Rigidbody _rigidbody;
 		private System.Action<Projectile> _collisionCallback;
 
+		[SerializeField] private ProjectileType _type;
+		
+		public enum ProjectileType 
+		{
+			None = 0,
+			Player = 1,
+			Enemy = 1 << 1,
+			Neutral = 1 << 2,
+		}
+
 		// Self initializing property. Gets the reference to the Rigidbody component when
 		// used the first time.
 		public Rigidbody Rigidbody
