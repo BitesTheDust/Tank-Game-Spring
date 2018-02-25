@@ -8,7 +8,6 @@ namespace TankGame.AI
 {
     public class FollowTargetState : AIStateBase
     {
-
         public FollowTargetState( EnemyUnit owner )
           : base( owner, AIStateType.FollowTarget )
         {
@@ -21,6 +20,9 @@ namespace TankGame.AI
             base.StateActivated();
         }
 
+        /// <summary>
+        /// Checks state change every frame.
+        /// </summary>
         public override void Update()
         {
             if(!ChangeState())
@@ -29,21 +31,37 @@ namespace TankGame.AI
                 Owner.Mover.Turn(Owner.Target.transform.position);
             }
         }
-
+        
+        /// <summary>
+		/// Attempts to change state from Follow Target to either Shoot or Patrol.
+		/// </summary>
+		/// <returns>True, if the state change is successful.
+        /// False otherwise.</returns>
         private bool ChangeState()
         {
-            // 1. Are we at the shooting range?
-            // If yes, go to shoot state.
-            float sqrDistanceToTarget = Owner.ToTargetVector.Value.sqrMagnitude;
-            if (sqrDistanceToTarget < Owner.SqrShootingDistance)
+            // Get layermask for player unit.
+            int playerLayer = LayerMask.NameToLayer("Player");
+            int mask = Flags.CreateMask(playerLayer);
+
+            // A ray from owner to their forward vector.
+            Ray toPlayerRay = new Ray( Owner.transform.position, Owner.transform.forward );
+            RaycastHit hit;
+
+            // Raycast in front of owner the length of ShootingDistance on player layer.
+            // If player was hit ...
+            if ( Physics.Raycast( toPlayerRay, out hit, Owner.ShootingDistance, mask ) ) 
             {
+                // Go to Shoot state.
                 return Owner.PerformTransition(AIStateType.Shoot);
             }
 
-            // 2. Did the player get away?
-            // If yes, go to patrol state.
+            // Get squared distance to target
+            float sqrDistanceToTarget = Owner.ToTargetVector.Value.sqrMagnitude;
+            
+            // If squared distance to target is greater than squared enemy detection distance ...
             if (sqrDistanceToTarget > Owner.SqrDetectEnemyDistance) 
             {
+                // Forget target & go to Patrol state.
                 Owner.Target = null;
                 return Owner.PerformTransition(AIStateType.Patrol);
             }

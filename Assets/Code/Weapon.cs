@@ -19,6 +19,12 @@ namespace TankGame
 		private bool _canShoot = true;
 		private float _firingTimer = 0;
 
+		// A public reference to bool _canShoot.
+		public bool CanShoot 
+		{
+			get { return _canShoot; }
+		}
+
 		public void Init( Unit owner )
 		{
 			_owner = owner;

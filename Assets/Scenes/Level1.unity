@@ -381,16 +381,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114401288640550870, guid: 985f4bafbd3a17d43bc560ec98fd6f2d,
-        type: 2}
-      propertyPath: _turnSpeed
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 114401288640550870, guid: 985f4bafbd3a17d43bc560ec98fd6f2d,
-        type: 2}
-      propertyPath: _moveSpeed
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 985f4bafbd3a17d43bc560ec98fd6f2d, type: 2}
   m_IsPrefabParent: 0
@@ -746,21 +736,6 @@ Prefab:
       propertyPath: _path
       value: 
       objectReference: {fileID: 1172353578}
-    - target: {fileID: 114391899213513196, guid: b50a1b663811d304989485cecf33b28d,
-        type: 2}
-      propertyPath: _detectEnemyDistance
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114391899213513196, guid: b50a1b663811d304989485cecf33b28d,
-        type: 2}
-      propertyPath: _shootingDistance
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114391899213513196, guid: b50a1b663811d304989485cecf33b28d,
-        type: 2}
-      propertyPath: _waypointArriveDistance
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b50a1b663811d304989485cecf33b28d, type: 2}
   m_IsPrefabParent: 0
