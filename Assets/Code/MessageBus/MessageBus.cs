@@ -20,7 +20,8 @@ namespace TankGame.Messaging
 			Type messageType = typeof( TMessage );
 			if( _subscriptions.ContainsKey( messageType ) ) 
 			{
-				var subscriptionsList = new List< ISubscription< IMessage > >(_subscriptions[ messageType ].Cast< ISubscription< TMessage > >() );
+				var subscriptionsList = new List< ISubscription< TMessage > >(
+						_subscriptions[ messageType ].Cast< ISubscription< TMessage > >() );
 				
 				foreach( var subscription in subscriptionsList ) 
 				{
@@ -40,7 +41,7 @@ namespace TankGame.Messaging
 			}
 			else 
 			{
-				_subscriptions.Add( messageType, new List< ISubscription< IMessage > >() { subscription } );
+				_subscriptions.Add( messageType, new List< ISubscription< TMessage > >() { subscription } );
 			}
 
 			return subscription;

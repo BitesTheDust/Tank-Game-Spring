@@ -71,7 +71,7 @@ namespace TankGame.AI
 		/// <summary>
 		/// Called just before state is deactivated.
 		/// </summary>
-		public virtual void StateDecativating()
+		public virtual void StateDeactivating()
 		{
 		}
 

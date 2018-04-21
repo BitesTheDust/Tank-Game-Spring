@@ -92,7 +92,7 @@ namespace TankGame
 			AIStateBase state = GetStateByType( targetState );
 			if ( state != null )
 			{
-				CurrentState.StateDecativating();
+				CurrentState.StateDeactivating();
 				CurrentState = state;
 				CurrentState.StateActivated();
 				result = true;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TankGame.Persistence;
+using TankGame.Messaging;
 
 namespace TankGame
 {
@@ -52,11 +53,6 @@ namespace TankGame
 
 		public int Id { get { return _id; } private set { _id = value; } }
 
-		protected void Awake()
-		{
-			Init();
-		}
-
         protected void OnDestroy()
         {
             Health.UnitDied -= HandleUnitDied;
@@ -100,6 +96,7 @@ namespace TankGame
 
         protected virtual void HandleUnitDied( Unit unit )
         {
+			GameManager.Instance.MessageBus.Publish( new UnitDiedMessage( this ) );
             gameObject.SetActive( false );
         }
 
@@ -116,7 +113,7 @@ namespace TankGame
 
 		public virtual void SetUnitData( UnitData data ) 
 		{
-			Health.SetHeakth( data.Health );
+			Health.SetHealth( data.Health );
 			transform.position = (Vector3) data.Position;
 			transform.eulerAngles = new Vector3( 0, data.YRotation, 0);
 			// TODO : Set unit active

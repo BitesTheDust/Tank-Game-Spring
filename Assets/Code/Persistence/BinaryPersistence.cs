@@ -50,18 +50,33 @@ namespace TankGame.Persistence
         public T Load<T>()
         {
 			T data = default(T);
-			FileStream stream = File.OpenRead( FilePath );
 
 			if( File.Exists( FilePath )) 
 			{
+				// If we are not using the 'using' statement, we have to make sure that
+				// the stream is correctly closed in case of an Exception being thrown.
+				// The finally block makes sure that the steam is closed correctly in
+				// every case.
+				FileStream stream = File.OpenRead( FilePath );
 				try
 				{
 					BinaryFormatter bf = new BinaryFormatter();
+
+					var surrogateSelector = new SurrogateSelector();
+					Vector3Surrogate v3ss = new Vector3Surrogate();
+					surrogateSelector.AddSurrogate( typeof( Vector3 ), 
+						new StreamingContext( StreamingContextStates.All ), v3ss );
+					bf.SurrogateSelector = surrogateSelector;
+
 					data = (T) bf.Deserialize( stream );
 				}
-				catch ( SerializationException e)
+				catch( SerializationException e)
 				{
-					Debug.LogError( "Serialization failed!" );
+					Debug.LogError( "Deserialization failed!" );
+				}
+				catch( Exception e) 
+				{
+					Debug.LogException( e );
 				}
 				finally 
 				{

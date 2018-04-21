@@ -19,7 +19,20 @@ namespace TankGame.AI
         public override void StateActivated()
         {
             base.StateActivated();
+            Owner.Target.Health.UnitDied +=  OnTargetDied;
         }
+
+        private void OnTargetDied( Unit target )
+		{
+			Owner.PerformTransition( AIStateType.Patrol );
+			Owner.Target = null;
+		}
+
+        public override void StateDeactivating()
+		{
+			base.StateDeactivating();
+			Owner.Target.Health.UnitDied -= OnTargetDied;
+		}
 
         /// <summary>
         /// Checks state change every frame.

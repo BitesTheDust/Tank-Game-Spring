@@ -1,15 +1,32 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace TankGame
 {
-    public class Health
+    public class Health : INotifyPropertyChanged
     {
-        public event Action<Unit> UnitDied;
+        private int _currentHealth;
 
-        public int CurrentHealth { get; private set; }
+        public event Action< Unit > UnitDied;
+        public event Action< Unit, int > HealthChanged;
+
+        public int CurrentHealth { 
+            get { return _currentHealth; } 
+            protected set 
+            {
+                _currentHealth = value;
+                // HealthChanged event is raised every time the CurrentHealth property is set.
+				if ( HealthChanged != null )
+				{
+					HealthChanged( Owner, _currentHealth );
+				}
+
+                OnPropertyChanged( () => CurrentHealth );
+            } 
+        }
         public Unit Owner { get; private set; }
 
         public Health( Unit owner, int startingHealth )
@@ -27,9 +44,9 @@ namespace TankGame
         {
             CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0, CurrentHealth);
             bool didDie = CurrentHealth == 0;
-            if(didDie && UnitDied != null)
+            if( didDie )
             {
-                UnitDied(Owner);
+                RaiseUnitDiedEvent();
             }
 
             return didDie;
@@ -39,14 +56,25 @@ namespace TankGame
         {
             if ( UnitDied != null ) 
             {
-                //UnitDied = Owner;
+                UnitDied( Owner );
             }
         }
 
-        public void SetHeakth( int health ) 
+        public void SetHealth( int health ) 
         {
             // TODO : What if unit is dead?
             CurrentHealth = health;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator] 
+        protected virtual void OnPropertyChanged< T >( Expression< Func< T > > propertyLambda ) 
+        {
+            if( PropertyChanged != null ) 
+            {
+                PropertyChanged( this, new PropertyChangedEventArgs( Utils.Utils.GetPropertyName( propertyLambda ) ) );
+            }
         }
     }
 }

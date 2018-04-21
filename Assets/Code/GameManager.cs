@@ -1,10 +1,12 @@
 ﻿using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TankGame.Persistence;
-using System.Linq;
 using TankGame.Messaging;
+using TankGame.Localization;
+using L10n = TankGame.Localization.Localization;
 
 namespace TankGame 
 {
@@ -34,6 +36,7 @@ namespace TankGame
 		private List<Unit> _enemyUnits = new List<Unit>();
 		private Unit _playerUnit = null;
 		private SaveSystem _saveSystem;
+		private const string LanguageKey = "Language";
 
 		public string SavePath { get { return Path.Combine( Application.persistentDataPath, "save" ); } }
 
@@ -58,10 +61,19 @@ namespace TankGame
 			IsClosing = true;
 		}
 
+		private void OnDestroy() 
+		{
+			L10n.LanguageLoaded -= OnLanguageLoaded;
+		}
+
 		private void Init() 
 		{
+			InitLocalization();
 			IsClosing = false;
 			MessageBus = new MessageBus();
+
+			var UI = FindObjectOfType< UI.UI >();
+			UI.Init();
 
 			Unit[] allUnits = FindObjectsOfType<Unit>();
 
@@ -73,8 +85,22 @@ namespace TankGame
 			_saveSystem = new SaveSystem( new JSONPersistence( SavePath ) );
 		}
 
+		private void InitLocalization() 
+		{
+			LangCode currentLang = (LangCode) PlayerPrefs.GetInt( LanguageKey, (int) LangCode.EN );
+			L10n.LoadLanguage( currentLang );
+			L10n.LanguageLoaded += OnLanguageLoaded;
+		}
+
+		private void OnLanguageLoaded( LangCode currentLanguage )
+		{
+			PlayerPrefs.SetInt( LanguageKey, (int) currentLanguage );
+		}
+
 		public void AddUnit(Unit unit) 
 		{
+			unit.Init();
+
 			if( unit is EnemyUnit ) 
 			{
 				_enemyUnits.Add(unit);
@@ -83,6 +109,9 @@ namespace TankGame
 			{
 				_playerUnit = unit;
 			}
+
+			// Add unit's health to the UI.
+			UI.UI.Current.HealthUI.AddUnit( unit );
 		}
 
 		public void Save() 

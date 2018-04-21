@@ -286,6 +286,7 @@ MonoBehaviour:
   _moveSpeed: 6
   _turnSpeed: 50
   _startingHealth: 100
+  _id: 7
   _horizontalAxis: Horizontal
   _verticalAxis: Vertical
 --- !u!136 &136527103664926384
