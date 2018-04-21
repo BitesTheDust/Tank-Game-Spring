@@ -26,5 +26,69 @@ namespace TankGame.Persistence
 		public SerializableVector3( Vector2 vector ) 
 			: this( vector.x, vector.y, 0)
 		{}
+
+		public static implicit operator SerializableVector3( Vector3 v ) 
+		{
+			return new SerializableVector3( v );
+		}
+
+		public static implicit operator SerializableVector3( Vector2 v ) 
+		{
+			return new SerializableVector3( v );
+		}
+
+		public static implicit operator Vector3( SerializableVector3 v ) 
+		{
+			return new Vector3( v.X, v.Y, v.Z );
+		}
+
+		public static explicit operator Vector2( SerializableVector3 v ) 
+		{
+			return new Vector2( v.X, v.Y );
+		}
+
+		public static SerializableVector3 operator +(
+			SerializableVector3 a, SerializableVector3 b ) 
+		{
+			return new SerializableVector3(
+				a.X + b.X,
+				a.Y + b.Y,
+				a.Z + b.Z);
+		}
+
+		public static SerializableVector3 operator -(
+			SerializableVector3 a, SerializableVector3 b ) 
+		{
+			return new SerializableVector3(
+				a.X - b.X,
+				a.Y - b.Y,
+				a.Z - b.Z);
+		}
+
+		public static SerializableVector3 operator -(
+			SerializableVector3 v )
+		{
+			return new SerializableVector3( -v.X, -v.Y, -v.Z );
+		}
+
+		public static SerializableVector3 operator +(
+			SerializableVector3 a, Vector3 b ) 
+		{
+			return new SerializableVector3(
+				a.X + b.x,
+				a.Y + b.y,
+				a.Z + b.z);
+		}
+
+		public static SerializableVector3 operator +(
+			Vector3 a, SerializableVector3 b ) 
+		{
+			return b + a;
+		}
+
+		public override string ToString() 
+		{
+			return string.Format( "X: {0}, Y: {1}, Z: {2}", X, Y, Z );
+		}
 	}
 }

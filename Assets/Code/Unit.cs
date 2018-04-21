@@ -2,11 +2,31 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TankGame.Persistence;
 
 namespace TankGame
 {
 	public abstract class Unit : MonoBehaviour, IDamageReceiver
 	{
+		#region Statics
+
+		private static int s_idCounter = 0;
+
+		public static int GetNextId() 
+		{
+			Unit[] allUnits = FindObjectsOfType<Unit>();
+
+			foreach( var unit in allUnits ) 
+			{
+				if( unit.Id >= s_idCounter )
+					s_idCounter = unit.Id + 1; 
+			}
+
+			return s_idCounter++;
+		}
+
+		#endregion Statics
+		
 		[SerializeField]
 		private float _moveSpeed;
 
@@ -18,6 +38,8 @@ namespace TankGame
 
 		private IMover _mover;
 
+		[SerializeField] private int _id = -1;
+
 		public Weapon Weapon
 		{
 			get;
@@ -27,6 +49,8 @@ namespace TankGame
 		public IMover Mover { get { return _mover; } }
 
         public Health Health { get; protected set; }
+
+		public int Id { get { return _id; } private set { _id = value; } }
 
 		protected void Awake()
 		{
@@ -58,6 +82,14 @@ namespace TankGame
 			
 		}
 
+		public void RequestId() 
+		{
+			if( Id < 0 ) 
+			{
+				Id = GetNextId();
+			}
+		}
+
 		// An abstract method has to be defined in a non-abstract child class.
 		protected abstract void Update();
 
@@ -70,5 +102,24 @@ namespace TankGame
         {
             gameObject.SetActive( false );
         }
+
+        public virtual UnitData GetUnitData()
+        {
+			return new UnitData() 
+			{
+				Health = Health.CurrentHealth,
+				Position = (SerializableVector3) transform.position,
+				YRotation = transform.eulerAngles.y,
+				Id = Id
+			};
+        }
+
+		public virtual void SetUnitData( UnitData data ) 
+		{
+			Health.SetHeakth( data.Health );
+			transform.position = (Vector3) data.Position;
+			transform.eulerAngles = new Vector3( 0, data.YRotation, 0);
+			// TODO : Set unit active
+		}
     }
 }

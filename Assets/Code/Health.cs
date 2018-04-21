@@ -39,8 +39,14 @@ namespace TankGame
         {
             if ( UnitDied != null ) 
             {
-
+                //UnitDied = Owner;
             }
+        }
+
+        public void SetHeakth( int health ) 
+        {
+            // TODO : What if unit is dead?
+            CurrentHealth = health;
         }
     }
 }

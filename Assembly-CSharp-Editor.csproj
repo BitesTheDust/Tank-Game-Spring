@@ -51,10 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Code\Editor\EnemyUnitInspector.cs" />
      <Compile Include="Assets\Code\Editor\FlagTests.cs" />
      <Compile Include="Assets\Code\Editor\GetComponentInHierarchyTest.cs" />
      <Compile Include="Assets\Code\Editor\GetOrAddComponentTest.cs" />
      <Compile Include="Assets\Code\Editor\Inspectors\ProjectileInspector.cs" />
+     <Compile Include="Assets\Code\Editor\Inspectors\UnitInspector.cs" />
      <Compile Include="Assets\Code\PathSystem\Editor\PathInspector.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity_2k7_2_03/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
